@@ -12,7 +12,6 @@ logging.basicConfig(level=logging.WARNING,
 
 
 class RocketChat:
-    headers = {}
     API_path = '/api/v1/'
 
     def __init__(self, user=None, password=None, auth_token=None, user_id=None,
@@ -23,6 +22,7 @@ class RocketChat:
         self.proxies = proxies
         self.ssl_verify = ssl_verify
         self.timeout = timeout
+        self.headers = {}
         if user and password:
             self.login(user, password)
         if auth_token and user_id:
