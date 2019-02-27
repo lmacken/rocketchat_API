@@ -5,11 +5,14 @@ import mimetypes
 import requests
 
 import aiohttp
+import magic
 from rocketchat_API.APIExceptions.RocketExceptions import (
     RocketAuthenticationException,
     RocketConnectionException,
     RocketMissingParamException,
 )
+
+MIME = magic.Magic(mime=True)
 
 logging.basicConfig(level=logging.WARNING,
                     format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
@@ -643,8 +646,9 @@ class RocketChat:
 
     async def rooms_upload(self, rid, file, **kwargs):
         """Post a message with attached file to a dedicated room."""
+        mime_type = MIME.from_file(file)
         files = {
-            'file': (file, open(file, 'rb'), 'image/png', {})
+            'file': (file, open(file, 'rb'), mime_type, {})
         }
         return await self.__call_api_post('rooms.upload/' + rid, kwargs=kwargs, use_json=False, files=files)
 
