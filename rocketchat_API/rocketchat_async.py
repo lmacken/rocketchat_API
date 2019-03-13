@@ -70,9 +70,12 @@ class RocketChat:
             use_json = False
             form_data = aiohttp.FormData()
             for file_key, file in files.items():
-                form_data.add_field(file_key, file[1],
-                                    content_type=file[2],
-                                    filename=file[0])
+                if isinstance(file, list):
+                    form_data.add_field(file_key, file[1],
+                                        content_type=file[2],
+                                        filename=file[0])
+                else:
+                    form_data.add_field(file_key, file)
             for key, value in reduced_args.items():
                 form_data.add_field(key, value)
 
@@ -705,3 +708,14 @@ class RocketChat:
     async def assets_unset_asset(self, asset_name):
         """Unset an asset by name"""
         return await self.__call_api_post('assets.unsetAsset', assetName=asset_name)
+
+
+    # Permissions
+
+    async def permissions_list(self):
+        """Lists permissions on the server."""
+        return await self.__call_api_post('permissions.listAll')
+
+    async def permissions_update(self, permissions):
+        """Edits permissions on the server."""
+        return await self.__call_api_post('permissions.update', permissions=permissions)
