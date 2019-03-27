@@ -70,7 +70,7 @@ class RocketChat:
             use_json = False
             form_data = aiohttp.FormData()
             for file_key, file in files.items():
-                if isinstance(file, list):
+                if isinstance(file, (list, tuple)):
                     form_data.add_field(file_key, file[1],
                                         content_type=file[2],
                                         filename=file[0])
